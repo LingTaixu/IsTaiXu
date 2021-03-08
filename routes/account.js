@@ -1,6 +1,6 @@
 const express = require('express')
-const conn = require('./db/conn')
 const router = express.Router()
+const conn = require('./db/conn')
 const sql = require('./sql')
 const { IsTrue, IsFalse } = require('./message')
 // 修改Key状态 注册成功的时候调用
@@ -16,8 +16,8 @@ const EditKey = function (key) {
  * 注册账号
  */
 router.post('/register', function (req, res, _next) {
-  const { Account, PassWord, UserName, Key, Email } = req.body
-  if (!(Account, PassWord, UserName, Key, Email)) {
+  const { Account, Password, UserName, Key, Email } = req.body
+  if (!(Account, Password, UserName, Key, Email)) {
     res.send(IsFalse('参数错误!'))
     return
   }
@@ -90,11 +90,8 @@ router.post('/checkKey', (req, res, _next) => {
     }
 
     if (data.length === 1) {
-      let KeyData = {}
-      data.forEach((element) => {
-        KeyData = element
-      })
-      if (KeyData.state === '1') {
+      const KeyData = { ...data[0] }
+      if (KeyData.state === '0') {
         res.send(IsFalse('该激活码已经使用!'))
       } else {
         res.send(IsFalse('该激活码已经存在!'))
@@ -106,5 +103,18 @@ router.post('/checkKey', (req, res, _next) => {
 /**
  * 登录账号
  */
-router.post('/login', (req, res, _next) => {})
+router.post('/login', (req, res, _next) => {
+  // eslint-disable-next-line no-unused-vars
+  const { Account, Password, Email, UserName } = req.body
+  console.log(Account, Password, Email, UserName)
+  if (!(Account, Password)) { res.send(IsFalse('参数错误!')) }
+  conn.query(sql.loginSql({ Account, Password }), (_err, data) => {
+    if (_err) res.send(_err)
+    if (data.length) {
+      const userInfo = { ...data[0] }
+      res.send(userInfo)
+    }
+  })
+})
+
 module.exports = router

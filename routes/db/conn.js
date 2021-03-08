@@ -8,8 +8,18 @@ const conn = mysql.createConnection({
   password: 'jiangwenwen1.',
   database: 'admin'
 })
+const list = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'guyinglanshan',
+  password: 'jiangwenwen1.',
+  database: 'list'
+})
 
 conn.connect()
-console.log('数据库链接成功...')
+console.log('admin链接成功...')
+list.connect()
+console.log('list链接成功...')
 
-module.exports = conn
+module.exports = {
+  conn, list
+}

@@ -6,7 +6,8 @@ const logger = require('morgan')
 
 const indexRouter = require('./routes/index')
 const accountRouter = require('./routes/account')
-
+const wxRouter = require('./routes/wx')
+const listRouter = require('./routes/list')
 const app = express()
 
 // 设置允许跨域访问该服务.
@@ -31,6 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/account', accountRouter)
+app.use('/list', listRouter)
+app.use('/wx', wxRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
